@@ -1,0 +1,36 @@
+generator Cliente {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Cliente {
+  id      Int @id @default(autoincrement())
+  nome    String
+  cpf     String @unique
+  cep     String
+  rua     String
+  bairro  String
+  numero  Int
+  cidade  String
+  uf      String
+  email   String 
+  contato String
+  status  Boolean
+  carros Carro[]
+  @@map("clientes")
+}
+
+model Carro {
+  id Int @id @default(autoincrement())
+  marca String
+  modelo String
+  placa String
+  cor String
+  cliente Cliente @relation(fields: [clienteID], references: [id])
+  clienteID Int
+  @@map("carros")
+}
