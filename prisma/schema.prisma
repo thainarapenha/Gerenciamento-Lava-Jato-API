@@ -34,3 +34,22 @@ model Carro {
   clienteID Int
   @@map("carros")
 }
+
+model Atendimento {
+  id Int @id @default(autoincrement())
+  descricao String
+  horaInicio String
+  horaFinal String
+  clienteCPF String
+  tipoServicos TipoServico[]
+  @@map("atendimentos")
+}
+
+model TipoServico {
+  id Int @id @default(autoincrement())
+  nomeServico String
+  valor Float
+  atendimentos Atendimento @relation(fields: [atendimentoID], references: [id])
+  atendimentoID Int
+  @@map("tipoServicos")
+}

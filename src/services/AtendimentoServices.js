@@ -1,16 +1,19 @@
-import { VerificarCampos } from "../utils/ValidaCliente.js";
+import { VerificarCamposServico } from "../utils/ValidaServico.js";
 
 export class AtendimentoServices {
-  constructor(clienteRepositorio) {
-    this.clienteRepositorio = clienteRepositorio;
+  constructor(atendimentoRepositorio) {
+    this.atendimentoRepositorio = atendimentoRepositorio;
   }
 
-  async create(dadosCliente) {
+  async create(dadosAtendimento) {
+    const { nomeServico, valor } = dadosAtendimento.tipoServicos;
+
     try {
-      const dadosValidos = VerificarCampos(dadosCliente);
+      const dadosValidos = VerificarCamposServico(dadosAtendimento);
 
       if(dadosValidos){
-        await this.clienteRepositorio.save(dadosCliente);
+        delete dadosAtendimento.tipoServicos;
+        await this.atendimentoRepositorio.save(dadosAtendimento, { nomeServico, valor });
       }
     } catch (error) {
       throw new Error(error);
@@ -18,12 +21,7 @@ export class AtendimentoServices {
   }
 
   async getAll() {
-    const cliente = await this.clienteRepositorio.list();
-    return cliente;
-  }
-
-  async getByCPF(cpf) {
-    const cliente = await this.clienteRepositorio.listByCPF(cpf);
-    return cliente;
+    const servico = await this.atendimentoRepositorio.list();
+    return servico;
   }
 }

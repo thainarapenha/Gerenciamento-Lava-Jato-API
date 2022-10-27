@@ -5,17 +5,23 @@ export class AtendimentoRepositorio {
     this.connection = new PrismaClient();
   }
 
-  async save(servico) {
-    await this.connection.cliente.create({ data: { ...servico } });
+  async save(atendimento, tipoServico) {
+    console.log(atendimento, tipoServico)
+
+    await this.connection.atendimento.create({
+      data: {
+        ...atendimento,
+        tipoServicos: {
+          create: {
+            ...tipoServico
+          }
+        }
+      }
+    });
   }
 
   async list() {
-    const servicos = await this.connection.servico.findMany();
+    const servicos = await this.connection.atendimento.findMany({ include: {tipoServicos: true} });
     return servicos;
-  }
-
-  async listByPLACA(placa) {
-    const servico = await this.connection.servico.findFirst({ where: { placa } });
-    return servico;
   }
 }
